@@ -1,53 +1,58 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include "main.h"
 /**
- * _printf - write a fucntuction as it's format
- * @*format:
- * @...:
- * @format: var to use
- * Return:0
+ * _printf - prints to stdout according to a format almost like printf
+ * _putchar - helps to print %
+ * _puts - helps  print the string
+ * @format: pointer to the outputed value
+ * Return: Number of outputd characters exluding null bytes in string
  */
 int _printf(const char *format, ...)
 {
-	int count = 0;
 	va_list args;
+	int i = 0, j = 0;
 
 	va_start(args, format);
-
-	while (*format != '\0')
+	while (format[i] != '\0')
 	{
-		if (*format == '%')
+		if (format[i] == '%')
 		{
-			format++;
-			if (*format == '%')
+			switch (format[i + 1])
 			{
-				putchar('%');
-				count++;
-			}
-			else if (*format == 'c')
-			{
-				char c = va_arg(args, int);
+				case 'c':
+					j += _putchar(va_arg(args, int));
+					i += 2;
+					break;
+				case 's':
+					j += _puts(va_arg(args, char*));
+					i += 2;
+					break;
+				case '%':
+					j += _putchar('%');
 
-				putchar(c);
-				count++;
+					i += 2;
+					break;
 			}
-			else if (*format == 's')
-			{
-				char *s = va_arg(args, char *);
-
-				for (; *s != '\0'; s++)
-				{
-					putchar(*s);
-					count++;
-				}
-			}
+			continue;
 		}
-		else
-		{
-			putchar(*format);
-			count++;
-		} format++;
-	} va_end(args);
-	return (count);
+		j += _putchar(format[i]);
+		i++;
+	}
+	va_end(args);
+	return (j);
+}
+
+int _putchar(char c)
+{
+	return (write(1, &c, 1));
+}
+int _puts(char *s)
+{
+	int i = 0;
+
+	while (s[i] != '\0')
+	{
+		_putchar(s[i]);
+		i++;
+	}
+	return (i);
 }
