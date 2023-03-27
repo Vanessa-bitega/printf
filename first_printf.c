@@ -30,6 +30,9 @@ int _printf(const char *format, ...)
 
 					i += 2;
 					break;
+				default:
+					va_end(args);
+					return (-1);
 			}
 			continue;
 		}
