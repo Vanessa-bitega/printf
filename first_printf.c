@@ -1,70 +1,51 @@
-#include "main.h"
-
 /**
- * _printf - prints to stdout according to a format almost like printf
- * @format: pointer to the outputted value
+ * _printf - Prints output according to a format
+ * @format: Character string composed of zero or more directives
+ *          See man 3 printf for more detail
  *
- * Return: Number of outputted characters excluding null bytes in string
+ * Return: Number of characters printed (excluding the null byte
+ *         used to end output to strings)
  */
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int i = 0, j = 0;
+	int i = 0, len = 0;
+
+	if (format == NULL)
+		return (-1);
 
 	va_start(args, format);
-	while (format && format[i] != '\0')
+	while (format[i])
 	{
-		if (format[i] == '%')
+		if (format[i] == '%' && format[i + 1] != '%')
 		{
-			switch (format[i + 1])
+			i++;
+			switch (format[i])
 			{
 				case 'c':
-					j += _putchar(va_arg(args, int));
-					i += 2;
+					len += _putchar(va_arg(args, int));
 					break;
 				case 's':
-					j += _puts(va_arg(args, char *));
-					i += 2;
+					len += _puts(va_arg(args, char *));
 					break;
 				case '%':
-					j += _putchar('%');
-					i += 2;
+					len += _putchar('%');
+					break;
+				default:
+					len += _putchar('%');
+					len += _putchar(format[i]);
 					break;
 			}
-			continue;
 		}
-		j += _putchar(format[i]);
+		else if (format[i] == '%' && format[i + 1] == '%')
+		{
+			len += _putchar('%');
+			i++;
+		}
+		else
+			len += _putchar(format[i]);
 		i++;
 	}
 	va_end(args);
-	return (j);
-}
-
-/**
- * _putchar - helps to print %
- * @c: right value
- *
- * Return: Always returns 0.
- */
-int _putchar(char c)
-{
-	return (write(1, &c, 1));
-}
-
-/**
- * _puts - helps to print a string
- * @s: The string to print to std
- *
- * Return: Always returns 0.
- */
-int _puts(char *s)
-{
-	int i = 0;
-
-	while (s[i] != '\0')
-	{
-		_putchar(s[i]);
-		i++;
-	}
-	return (i);
+	return (len);
 }
