@@ -10,7 +10,7 @@ int _puts(char *str)
 {
 	int i;
 
-	for (i = 0; str[i] != '\0')
-		i++;
+	for (i = 0; str[i] != '\0'; i++)
+		;
 	return (write(1, str, i));
 }
