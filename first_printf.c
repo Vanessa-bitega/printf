@@ -1,3 +1,4 @@
+#include "main.h"
 /**
  * _printf - Prints output according to a format
  * @format: Character string composed of zero or more directives
